@@ -875,7 +875,7 @@ create or replace table DATA_PROFILING_COLUMN_NAMES_REGEX(
 insert into DATA_PROFILING_COLUMN_NAMES_REGEX
                 (CONFIDENCE_RATIO, RULE_NAME, DESCRIPTION, CATEGORIES, REGEX, REGEX_NEGATIVE)
 values
-(66.7,  'en_PRIMAY_KEY',        'a primary key',                'METADATA',         '\\bPK_|_PK\\b|\\bID\\b', NULL),
+(66.7,  'en_PRIMARY_KEY',       'a primary key',                'METADATA',         '\\bPK_|_PK\\b|\\bID\\b', NULL),
 (50,    'en_FOREIGN_KEY',	    'a foreign key',	            'METADATA',	        '\\bFK_|_FK\\b|\\bPARENT_ID\\b', NULL),
 (99,    'en_EMAIL',	            'emails',	                    'PII',	            '\\bEMAIL\\b|\\bEMAIL_|_EMAIL_|_EMAIL\\b', NULL),
 (80,    'en_PHONE',	            'phone numbers',	            'PII,LOCATION',	    '\\bPHONE\\b|\\bPHONE_|_PHONE_|_PHONE\\b', NULL),
