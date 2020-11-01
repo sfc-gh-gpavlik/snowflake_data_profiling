@@ -30,8 +30,12 @@ call DATA_PROFILE_COLUMN_NAMES('.*', '.*', '.*', '.*');
 *  Examine the results of the column name profile.                                                      *
 *                                                                                                       *
 ********************************************************************************************************/
-select * from DATA_PROFILE_COLUMN_NAMES 
+select * from DATA_PROFILE_COLUMN_NAMES
 order by SEEMS_TO_HAVE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME, COLUMN_NAME;
+
+-- Find likely single-column primary keys based on column name match and ordinal position = 1
+select * from DATA_PROFILE_COLUMN_NAMES
+where RULE_NAME = 'en_PRIMARY_KEY' and ORDINAL_POSITION = 1;
 
 /********************************************************************************************************
 *                                                                                                       *
@@ -41,7 +45,7 @@ order by SEEMS_TO_HAVE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME, COLUMN_NAME;
 *  need to specify a where clause, use a blank string for the WHERE_CLAUSE parameter.                   *
 *                                                                                                       *
 ********************************************************************************************************/
-set WHERE_CLAUSE = 'O_ORDERDATE > \'1997-01-01\'';
+set WHERE_CLAUSE = '';
 select $WHERE_CLAUSE; --Confirm the where clause is correct, especially the single quotes if required.
 
 /********************************************************************************************************
@@ -54,7 +58,7 @@ select $WHERE_CLAUSE; --Confirm the where clause is correct, especially the sing
 call data_profile_columns(
                            'SNOWFLAKE_SAMPLE_DATA',      -- The database name or regex pattern to profile
                            'TPCH_SF1',                   -- The schema name or regex pattern to profile
-                           'ORDERS',                     -- The table name or regex pattern to profile
+                           '.*',                     -- The table name or regex pattern to profile
                            '.*',                         -- The column name or regex pattern to profile
                            'limit',                      -- Sample strategy, 'limit' or 'sample'. Do not use a where clause if 'sample'.
                            100000,                       -- Number of rows to sample
@@ -90,9 +94,13 @@ call data_profile_columns(
 ********************************************************************************************************/
 select * from DATA_PROFILE;
 
+-- Check for columns with possible single-column primary key candidates:
+select * from DATA_PROFILE where IS_UNIQUE;
+
+
 /********************************************************************************************************
 *                                                                                                       *
 *  Sample query to check for important data type mismatches                                             *
 *                                                                                                       *
 ********************************************************************************************************/
-select * from DATA_PROFILE where HAS_TYPE_MISMATCH and DEFINED_TYPE = 'TEXT' and INFERRED_TYPE in ('DATE', 'TIME', 'TIMESTAMP');
+select * from DATA_PROFILE where HAS_TYPE_MISMATCH
